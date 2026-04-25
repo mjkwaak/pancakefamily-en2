@@ -83,7 +83,7 @@ html,body{height:100%;background:#fff;color:#000}
 #reader-title{display:none !important}
 
 /* ══ 본문 영역 (PC) ══ */
-#txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:770px;padding-left:250px;overflow-y:auto;scrollbar-width:none}
+#txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:calc(50% - 500px);width:750px;padding-left:250px;overflow-y:auto;scrollbar-width:none}
 #txt-wrap::-webkit-scrollbar{display:none}
 #txt{display:flex;flex-direction:column}
 
@@ -140,14 +140,12 @@ html,body{height:100%;background:#fff;color:#000}
     text-align:justify !important;
     hyphens:auto !important;
     -webkit-hyphens:auto !important;
+    text-justify:inter-character !important;
     margin-bottom:1.2em !important;
     color:#000 !important
   }
 
-  .spk-inline{
-    margin-left:0 !important;
-    width:100% !important
-  }
+  .spk-inline{margin-left:-250px;width:750px}
 
   .para.no-spk{padding-left:0 !important}
 
