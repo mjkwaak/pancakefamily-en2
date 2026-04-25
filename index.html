@@ -83,16 +83,16 @@ html,body{height:100%;background:#fff;color:#000}
 #reader-title{display:none !important}
 
 /* ══ 본문 영역 (PC) ══ */
-#txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:680px;padding-left:160px;overflow-y:auto;scrollbar-width:none}
+#txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:520px;padding-left:0;overflow-y:auto;scrollbar-width:none}
 #txt-wrap::-webkit-scrollbar{display:none}
 #txt{display:flex;flex-direction:column}
 
 /* ══ 본문 텍스트 ══ */
-.para{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;line-height:1.1;color:#000;letter-spacing:0.02em;word-spacing:0.05em;margin-bottom:1.4em}
+.para{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;line-height:1.3;color:#000;letter-spacing:0.02em;word-spacing:0.05em;margin-bottom:1.4em}
 .ch{display:inline}
-.spk-row{display:grid;grid-template-columns:160px 1fr;column-gap:0;margin-left:-160px;margin-bottom:1.4em;align-items:start}
-.spk{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;color:#bbb;padding-top:0;letter-spacing:0.02em;word-spacing:0.05em;text-align:right;padding-right:32px}
-.spk-row .para{margin:0}
+
+
+
 .para.no-spk{padding-left:0}
 
 /* ══ 완료 ══ */
@@ -118,21 +118,22 @@ html,body{height:100%;background:#fff;color:#000}
   #reader-title{display:none !important}
 
   /* 본문: interviewer 컬럼 공간 확보 후 본문 */
-  #txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:680px;padding-left:160px;overflow-y:auto;scrollbar-width:none}
+  #txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:520px;padding-left:0;overflow-y:auto;scrollbar-width:none}
 
   .para{
     font-size:14px !important;
-    line-height:1.1 !important;
+    line-height:1.3 !important;
     margin-bottom:1.4em !important;
     color:#000 !important
   }
   /* interviewer 행: grid로 왼쪽에 spk, 오른쪽에 본문 */
-  .spk-row{display:grid;grid-template-columns:160px 1fr;column-gap:0;margin-left:-160px;margin-bottom:1.4em;align-items:start}
-  .spk{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;color:#bbb;padding-top:0;letter-spacing:0.02em;word-spacing:0.05em;text-align:right;padding-right:32px}
-  .spk-row .para{margin:0}
+  
+  
+  
   .para.no-spk{padding-left:0}
 }
-</style>
+
+.spk-ch{color:#000}</style>
 </head>
 <body>
 
@@ -378,27 +379,23 @@ function buildText() {
   const frag = document.createDocumentFragment();
   RAW.forEach(b => {
     if (b.s) {
-      const row = document.createElement('div');
-      row.className = 'spk-row';
-      const sp = document.createElement('span');
-      sp.className = 'spk';
-      [...b.s].forEach(ch => {
-        const sc = document.createElement('span');
-        sc.className='ch'; sc.textContent=ch;
-        sp.appendChild(sc);
-        chars.push({el:sc, op:1, gone:false});
-      });
-      row.appendChild(sp);
       const p = document.createElement('p');
-      p.className = 'para';
+      p.className = 'para spk-inline';
+      // "Interviewer: " 접두어
+      const prefix = b.s + ': ';
+      [...prefix].forEach(ch => {
+        const s = document.createElement('span');
+        s.className='ch spk-ch'; s.textContent=ch;
+        p.appendChild(s);
+        chars.push({el:s, op:1, gone:false});
+      });
       [...b.t].forEach(ch => {
         const s = document.createElement('span');
         s.className='ch'; s.textContent=ch;
         p.appendChild(s);
         chars.push({el:s, op:1, gone:false});
       });
-      row.appendChild(p);
-      frag.appendChild(row);
+      frag.appendChild(p);
     } else {
       const p = document.createElement('p');
       p.className = 'para no-spk';
