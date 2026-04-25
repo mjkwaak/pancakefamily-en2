@@ -24,7 +24,7 @@ html,body{height:100%;background:#fff;color:#000}
 #scr-start{
   position:fixed;inset:0;background:#fff;z-index:100;
   display:flex;flex-direction:row;align-items:flex-start;
-  padding:40px 250px;
+  padding:40px 250px 40px 260px;
   overflow:hidden;touch-action:none
 }
 #scr-start .title{
@@ -40,7 +40,7 @@ html,body{height:100%;background:#fff;color:#000}
   font-size:22px;letter-spacing:-0.01em;
   cursor:pointer;transition:color .3s;
   padding:0;white-space:nowrap;
-  position:fixed;top:40px;left:58%
+  position:fixed;top:40px;left:calc(58% + 50px)
 }
 .btn:hover{color:#000}
 
@@ -115,7 +115,7 @@ html,body{height:100%;background:#fff;color:#000}
   #scr-start{padding:20px;touch-action:none}
   #scr-start .title{font-size:17px}
   .btn{position:fixed;top:20px;left:50%;font-size:17px;padding:0}
-  #cal-label{font-size:11px !important;line-height:1.2 !important}
+  #cal-label{font-size:13pt !important;line-height:1.2 !important}
   #reader-title{display:none !important}
 
   #txt-wrap{
@@ -146,9 +146,9 @@ html,body{height:100%;background:#fff;color:#000}
   /* 모바일 interviewer: 본문과 같은 크기, 텍스트박스 절반 폭 */
   /* interviewer 문장만 절반 폭 */
   .spk-inline{
-    margin-left:0 !important;
+    margin-left:50% !important;
     width:50% !important;
-    font-size:14pt !important
+    font-size:13.2pt !important
   }
   /* 일반 문장은 전체 폭 — no-spk */
   .para.no-spk{
