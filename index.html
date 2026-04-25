@@ -58,7 +58,7 @@ html,body{height:100%;background:#fff;color:#000}
   background:#c84b1e;transform:translate(-50%,-50%);
   cursor:pointer;touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
-  box-shadow:0 0 0 7px rgba(200,75,30,.18);transition:opacity .3s
+  transition:opacity .3s
 }
 .cdot.off{opacity:.2;pointer-events:none}
 .cdot.done{opacity:.1;pointer-events:none}
@@ -80,25 +80,18 @@ html,body{height:100%;background:#fff;color:#000}
 }
 
 /* ══ 리더 타이틀 (PC) ══ */
-#reader-title{
-  display:none;
-  position:fixed;top:40px;left:250px;
-  font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:22px;
-  color:#000;flex-direction:column;
-  line-height:1.15;letter-spacing:0.01em;
-  pointer-events:auto;cursor:pointer;z-index:10
-}
+#reader-title{display:none !important}
 
 /* ══ 본문 영역 (PC) ══ */
-#txt-wrap{display:none;position:fixed;top:40px;bottom:60px;left:50%;transform:translateX(-50%);width:520px;overflow-y:auto;scrollbar-width:none}
+#txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:680px;padding-left:160px;overflow-y:auto;scrollbar-width:none}
 #txt-wrap::-webkit-scrollbar{display:none}
 #txt{display:flex;flex-direction:column}
 
 /* ══ 본문 텍스트 ══ */
-.para{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:15px;line-height:1.5;color:#000;letter-spacing:0.01em;margin-bottom:1.4em}
+.para{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;line-height:1.1;color:#000;letter-spacing:0.02em;word-spacing:0.05em;margin-bottom:1.4em}
 .ch{display:inline}
-.spk-row{display:grid;grid-template-columns:160px 520px;column-gap:0;margin-left:-160px;margin-bottom:1.4em;align-items:start}
-.spk{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:15px;color:#bbb;padding-top:0;letter-spacing:0.01em;text-align:right;padding-right:32px}
+.spk-row{display:grid;grid-template-columns:160px 1fr;column-gap:0;margin-left:-160px;margin-bottom:1.4em;align-items:start}
+.spk{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;color:#bbb;padding-top:0;letter-spacing:0.02em;word-spacing:0.05em;text-align:right;padding-right:32px}
 .spk-row .para{margin:0}
 .para.no-spk{padding-left:0}
 
@@ -122,30 +115,20 @@ html,body{height:100%;background:#fff;color:#000}
   .btn{position:fixed;top:20px;left:50%;font-size:17px;padding:0}
 
   /* 리더 타이틀: 왼쪽 고정 */
-  #reader-title{
-    top:0 !important;
-    left:0 !important;
-    width:130px !important;
-    padding:20px 12px 0 !important;
-    font-size:17px !important;
-    line-height:1.05 !important;
-    letter-spacing:-0.01em !important;
-    background:#000 !important;
-    z-index:20 !important
-  }
+  #reader-title{display:none !important}
 
   /* 본문: interviewer 컬럼 공간 확보 후 본문 */
-  #txt-wrap{display:none;position:fixed;top:40px;bottom:60px;left:50%;transform:translateX(-50%);width:520px;overflow-y:auto;scrollbar-width:none}
+  #txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:680px;padding-left:160px;overflow-y:auto;scrollbar-width:none}
 
   .para{
-    font-size:13px !important;
-    line-height:1.5 !important;
+    font-size:14px !important;
+    line-height:1.1 !important;
     margin-bottom:1.4em !important;
     color:#000 !important
   }
   /* interviewer 행: grid로 왼쪽에 spk, 오른쪽에 본문 */
-  .spk-row{display:grid;grid-template-columns:160px 520px;column-gap:0;margin-left:-160px;margin-bottom:1.4em;align-items:start}
-  .spk{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:15px;color:#bbb;padding-top:0;letter-spacing:0.01em;text-align:right;padding-right:32px}
+  .spk-row{display:grid;grid-template-columns:160px 1fr;column-gap:0;margin-left:-160px;margin-bottom:1.4em;align-items:start}
+  .spk{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;color:#bbb;padding-top:0;letter-spacing:0.02em;word-spacing:0.05em;text-align:right;padding-right:32px}
   .spk-row .para{margin:0}
   .para.no-spk{padding-left:0}
 }
