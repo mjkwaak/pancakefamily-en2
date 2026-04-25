@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Pancake Family</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  (function(d){
+    var config={kitId:'azt6kde',scriptTimeout:3000,async:true},
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),
+    tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;
+    h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';
+    tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;
+    if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);
+    try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s);
+  })(document);
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;color:#fff}
+
+/* ══ 표지 ══ */
+#scr-start{
+  position:fixed;inset:0;background:#000;z-index:100;
+  display:flex;flex-direction:row;align-items:flex-start;
+  padding:40px 250px;
+  overflow:hidden;touch-action:none
+}
+#scr-start .title{
+  font-family:'adobe-myungjo-std',serif;font-weight:500;
+  font-size:22px;color:#fff;
+  display:flex;flex-direction:column;
+  line-height:1.05;letter-spacing:-0.01em;
+  pointer-events:none;flex-shrink:0
+}
+.btn{
+  background:transparent;border:none;color:#888;
+  font-family:'adobe-myungjo-std',serif;font-weight:500;
+  font-size:22px;letter-spacing:-0.01em;
+  cursor:pointer;transition:color .3s;
+  padding:0;white-space:nowrap;
+  position:fixed;top:40px;left:58%
+}
+.btn:hover{color:#fff}
+
+/* ══ 보정 화면 ══ */
+#scr-cal{position:fixed;inset:0;background:#000;display:none;z-index:100}
+#cal-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'adobe-myungjo-std',serif;font-weight:500;
+  font-size:15px;color:#888;
+  letter-spacing:0.04em;text-align:center;line-height:1.5;
+  pointer-events:none
+}
+.cdot{
+  position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#c84b1e;transform:translate(-50%,-50%);
+  cursor:pointer;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:0 0 0 7px rgba(200,75,30,.18);transition:opacity .3s
+}
+.cdot.off{opacity:.2;pointer-events:none}
+.cdot.done{opacity:.1;pointer-events:none}
+
+/* ══ 유틸 ══ */
+#vid{display:none!important}
+#dot{
+  position:fixed;width:14px;height:14px;border-radius:50%;
+  background:rgba(200,75,30,.8);pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);visibility:hidden;left:-50px;top:-50px
+}
+#bar{display:none}
+#sbar{
+  position:fixed;bottom:0;left:0;right:0;padding:10px 28px;
+  display:none!important;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:#2a2a2a;letter-spacing:0.12em;background:#000;
+  border-top:1px solid rgba(255,255,255,.06);
+  justify-content:space-between;align-items:center
+}
+
+/* ══ 리더 타이틀 (PC) ══ */
+#reader-title{
+  display:none;
+  position:fixed;top:40px;left:250px;
+  font-family:'adobe-myungjo-std',serif;font-weight:500;font-size:22px;
+  color:#fff;flex-direction:column;
+  line-height:1.15;letter-spacing:0.01em;
+  pointer-events:auto;cursor:pointer;z-index:10
+}
+
+/* ══ 본문 영역 (PC) ══ */
+#txt-wrap{
+  display:none;
+  position:fixed;top:40px;right:250px;
+  width:calc(50% - 250px);bottom:60px;
+  overflow-y:auto;scrollbar-width:none
+}
+#txt-wrap::-webkit-scrollbar{display:none}
+#txt{display:flex;flex-direction:column}
+
+/* ══ 본문 텍스트 ══ */
+.para{
+  line-height:1.3;font-size:15px;color:#fff;
+  font-family:"psfournier-std",sans-serif;font-weight:300;
+  letter-spacing:0.04em;margin-bottom:1.6em
+}
+.ch{display:inline}
+.spk-row{
+  display:grid;grid-template-columns:80px 1fr;
+  column-gap:20px;margin-bottom:1.6em;align-items:start
+}
+.spk{
+  font-family:"psfournier-std",sans-serif;
+  font-size:15px;font-weight:300;color:#555;padding-top:1px
+}
+.spk-row .para{margin-top:0;margin-bottom:0}
+.para.no-spk{padding-left:100px}
+
+/* ══ 완료 ══ */
+#scr-done{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);
+  z-index:100;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem
+}
+#scr-done p{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:#555;letter-spacing:0.2em;text-align:center;line-height:2
+}
+#scr-done .big{font-size:13px;color:#444}
+
+/* ══ 모바일 ══ */
+@media (max-width:600px) {
+
+  #scr-start{padding:20px 12px;touch-action:none}
+  #cal-label{font-size:12px !important;line-height:1.3 !important}
+  #scr-start .title{font-size:17px}
+  .btn{position:fixed;top:20px;left:50%;font-size:17px;padding:0}
+
+  /* 리더 타이틀: 왼쪽 고정 */
+  #reader-title{
+    top:0 !important;
+    left:0 !important;
+    width:130px !important;
+    padding:20px 12px 0 !important;
+    font-size:17px !important;
+    line-height:1.05 !important;
+    letter-spacing:-0.01em !important;
+    background:#000 !important;
+    z-index:20 !important
+  }
+
+  /* 본문: interviewer 컬럼 공간 확보 후 본문 */
+  #txt-wrap{
+    top:0 !important;
+    left:130px !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:auto !important;
+    padding:20px 12px 80px 8px !important;
+    overflow-y:scroll !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important
+  }
+
+  .para{
+    font-size:13px !important;
+    line-height:1.5 !important;
+    margin-bottom:1.4em !important;
+    color:#fff !important
+  }
+  /* interviewer 행: grid로 왼쪽에 spk, 오른쪽에 본문 */
+  .spk-row{
+    display:grid !important;
+    grid-template-columns:52px 1fr !important;
+    column-gap:8px !important;
+    margin-bottom:1.4em !important
+  }
+  .spk{
+    font-size:13px !important;
+    color:#555 !important;
+    padding-top:2px !important;
+    word-break:break-all !important
+  }
+  .spk-row .para{grid-column:2 !important;margin:0 !important}
+  .para.no-spk{padding-left:0 !important}
+}
+</style>
+</head>
+<body>
+
+<div id="scr-start">
+  <div class="title"><span>The</span><span>Pancake</span><span>Family</span></div>
+  <button class="btn" id="btn-start">Read</button>
+</div>
+
+<div id="scr-cal">
+  <div id="cal-label">Gaze at each red dot and click in order</div>
+</div>
+
+<video id="vid" autoplay playsinline muted></video>
+<div id="dot"></div>
+<div id="bar"></div>
+<div id="sbar"><span id="sbar-l">—</span><span id="sbar-r">0% erased</span></div>
+
+<div id="reader-title"><span>The</span><span>Pancake</span><span>Family</span></div>
+<div id="txt-wrap"><div id="txt"></div></div>
+
+<div id="scr-done">
+  <p class="big">The book has vanished.</p>
+  <p>Because you read it.<br>This story now exists only inside you.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+<script>
+'use strict';
+
+const RAW=[
+  {s:null,t:"That pale, huh? Jesus, I bet I look like a ghost. I feel like I've bled out two gallons."},
+  {s:null,t:"What? No. Not a scratch."},
+  {s:null,t:"Sorry to ramble. It's just that I'm… what's the word for it?"},
+  {s:null,t:"Detached."},
+  {s:null,t:"Strange feeling. Seen it enough times in the field. Sort of figured if I was ever going to experience it myself then I would have experienced it by now. Hell of a thing. I feel like I'm floating outside of my body. Just cut the cord and I'd float away."},
+  {s:null,t:"Did you see the crime scene?"},
+  {s:null,t:"Don't."},
+  {s:null,t:"Don't look at the pictures. Don't even touch the file. You'll thank me."},
+  {s:null,t:"I can't get my knees to stop rattling. Is that why you're holding onto your coffee like that? I'm shaking the table, aren't I? Hold on a second, let me back up my chair. There, that's better."},
+  {s:"Interviewer",t:"We've got to go official now, Hob. Can you confirm for the record that you're waiving your right to an attorney?"},
+  {s:null,t:"No, I'm still not interested in an attorney."},
+  {s:null,t:"I mean, yes, I'm waiving my rights."},
+  {s:null,t:"Sorry."},
+  {s:null,t:"And I'm as sound of mind as I'll ever be."},
+  {s:"Interviewer",t:"Are you sure?"},
+  {s:null,t:"Yes."},
+  {s:"Interviewer",t:"Let the record show that Detective Hobson Milgate, retired, has waived his right to an attorney."},
+  {s:null,t:"I won't need a lawyer after the DA stops puking and considers taking it public."},
+  {s:null,t:"They're not showing that to a jury."},
+  {s:"Interviewer",t:"Are you ready to begin?"},
+  {s:null,t:"No, but I'll talk anyway."},
+  {s:"Interviewer",t:"What led you to the crime scene on the night in question?"},
+  {s:null,t:"Would you believe I was planning a fishing trip before this started?"},
+  {s:null,t:"Nevermind."},
+  {s:null,t:"Hold on, I'm thinking."},
+  {s:null,t:"Hard to organize it."},
+  {s:null,t:"Never been on this side of the interrogation table before."},
+  {s:null,t:"I guess it started with the reporter. Name of Bamer. She contacted me a week ago by email and claimed she had new information on the Driscoll murders. I was the lead investigator. The case had gone unsolved for twenty years. Cold as ice."},
+  {s:null,t:"Frankly, I thought it was all bullshit at first."},
+  {s:null,t:"You know how that can be. Most of the time it's not even on purpose. Everyone thinks they know something that will crack a case wide open. Theories are easy when you don't have to check them against evidence. The Driscoll murders were a big story around these parts. Lots of interest. Lots of press. Over the years, I must've gotten a couple hundred shit theories."},
+  {s:null,t:"When I retired, I handed the investigation over to Detective Caroll, but I didn't want him to be bothered. I know he's busy with the recent gang activity. I figured I'd check it out as a courtesy. I wasn't expecting it to go anywhere."},
+  {s:null,t:"I met her for lunch at Puryear's Cafe. Good-looking blonde gal, professional, so she didn't fit the typical profile of a hoaxer or conspiracy theorist. Not that I put too much faith in profiles. She also might have been one of those creepy gals that gets off on death. God knows I've dealt with those too."},
+  {s:null,t:"I still thought she might be pulling my leg, or maybe she had been fooled too, but she had a file with her. Looked legit. It contained what appeared to be a confession by the Driscoll… well, he wasn't a murderer was he?"},
+  {s:null,t:"I really do wish he had been, you know."},
+  {s:null,t:"It would have been so much better for everyone."},
+  {s:"Interviewer",t:"Can you please fill us in on the relevant details of the Driscoll case?"},
+  {s:null,t:"Let's see, it would have been twenty years ago now. Thinking of all those years… I mean, twenty goddamn years. That's a long time to be…"},
+  {s:"Interviewer",t:"Take your time, Hob."},
+  {s:null,t:"Thanks."},
+  {s:null,t:"[Throat Clearing]"},
+  {s:null,t:"The Driscolls were a family of six out in the suburbs. Upper middle class. Father was an attorney, mother ran her own business selling pottery out of the house. Four children, all high school age and below. Good kids. Honor roll. No criminal records to speak of. The oldest son was caught smoking dope at his high school once, but nothing much besides that. Just the typical stuff you find when you look at people too closely."},
+  {s:null,t:"They disappeared October 13th, 1994. No trace was found of the bodies. The mystery and seeing as how it was right around Halloween is probably why the press went so crazy. You still see it show up on some of those unsolved mystery shows. A whole family disappeared and no one saw a thing. No one knew where they went."},
+  {s:null,t:"A neighbor lodged a sound complaint, which is how we got involved. There was an alarm going off and they figured it might be an intruder or something. We dispatched a vehicle. When no one answered the door, the patrolman went in to investigate."},
+  {s:null,t:"There were obvious signs of a struggle in the youngest daughter's bedroom. The bed had been flipped over and the sheets were torn. The alarm was a carbon monoxide detector. We found elevated concentrations of carbon monoxide in the fabric of all the bedspreads except the youngest daughter's. We wouldn't have known to look without the alarm."},
+  {s:null,t:"The neighbor indicated the alarm had been sounding for over a day, and he'd been unable to get anyone to answer the door during that time. We also found several aluminum canisters and some hoses in a dumpster a few blocks away. At the time, we assumed the Driscolls had been gassed and disposed of at a different location. Excepting, of course, the daughter who woke up at the end and put up a struggle."},
+  {s:null,t:"The investigation gave no leads."},
+  {s:null,t:"Of course, our first thought was that the father did it. We checked it out but he didn't have motive. No leads to follow up on. Same with the mother. Surviving family checked out clean, too. The father had a few clients who might have had motive, but the means weren't there. He was a divorce lawyer, but not for anybody who could have taken out an entire family without leaving evidence. There was a chemistry teacher who lived three blocks away and we investigated him for a while because of the canisters but he alibied out. Same with a dentist who lived nearby. The wife had an online flirtation with some kid out in England but nothing adulterous and he wasn't even in the country at the time of the murder."},
+  {s:null,t:"We settled, unhappily, on the idea of a random killing. Hardest pieces of shit to catch when there's no pattern like that. We must have sunk tens of thousands of man hours into this case, chasing down leads. Nothing ever came of any of it."},
+  {s:null,t:"We did track the down the canisters. They were stolen from a laboratory ten miles away. There was no security footage. We couldn't find any leads on the thief. After six months with no repeat attacks the investigation went cold."},
+  {s:null,t:"The Driscolls had been knocked out and abducted. Like I said, no one ever found the bodies. Who was to say they hadn't just run off?"},
+  {s:null,t:"Until, well, I'd rather only talk about that once."},
+  {s:"Interviewer",t:"What can you tell us about how the confession wound up with Miss Bamer?"},
+  {s:null,t:"She'd been following the case for some years, both personally and as a reporter. Like I said, it captured the imagination of a lot of people. Even seemingly normal folks thought it could have been aliens, ghosts or demons. Miss Bamer published a retrospective on the murders given the twenty year anniversary. It caused a renewed interest, which happened from time to time. As usual, I declined to comment citing lack of new evidence. I remembered her asking for my quote though, which is why I accepted the lunch meeting."},
+  {s:null,t:"After publication of the article, Miss Bamer claimed that she had been sent a file. She wished to have me authenticate. The most pertinent part of the file was a confession. I assured Miss Bamer that such false documents are not uncommon, especially on older cases like this, and that I'd personally heard two dozen confessions of the Driscoll murders. She was insistent. Once I felt she wasn't trying to pull off a hoax or getting off on the idea of talking about a murder, I agreed to the meeting."},
+  {s:null,t:"She stated the confession had been mailed to her in the same envelope she showed to me when we met for lunch."},
+  {s:"Interviewer",t:"Can you describe its contents?"},
+  {s:null,t:"Old newspaper clippings outlining the progress of my investigation. They seemed appropriately yellowed, so I'd guess they were from the trophy book of the perpetrator. There were also six photos alleging to be of the individual members of the Driscoll family, as well as several other photos of the… facility where they had been taken."},
+  {s:null,t:"Look at that."},
+  {s:null,t:"My hands won't stop shaking, see? I'm trying as hard as I can and I just can't make it happen. I'll have to ask the paramedic for a sedative when I'm done with the statement. I don't think I'll be able to sleep, otherwise."},
+  {s:null,t:"No, I'm fine for now. I don't want anything to interfere with my recollection for your recording."},
+  {s:null,t:"Just carrying it around in my head is like… sorry, I'll stay focused."},
+  {s:null,t:"The photos were of the Driscoll family, of course. At the time I didn't know that. The photos had aged poorly and they could have been of anyone. It was very hard to distinguish features. However, given the elaborate nature of the file I figured it did warrant a further look."},
+  {s:null,t:"As to the confession letter, well, it was brief. It gave an address. That's the first thing I noticed. I couldn't locate the address online, which meant it had to be old. The confession letter said, 'Stop printing lies. I never killed anyone. It just took a while to get them ready for breakfast.' There was no signature."},
+  {s:null,t:"I just remembered something."},
+  {s:null,t:"God damnit."},
+  {s:null,t:"We got sent a breakfast menu a month after the disappearance! Someone had drawn a red circle around a picture of pancakes. The letter said 'They're not dead, they're getting ready for breakfast!' We put it in the junk lead file."},
+  {s:null,t:"Oh God."},
+  {s:"Interviewer",t:"Detective Milgate, do you need a moment?"},
+  {s:null,t:"Oh God."},
+  {s:null,t:"I… how could I have known?"},
+  {s:null,t:"We tried to track down that menu. We could never find out where it had come from. It wasn't any place local. The identifying information had been cut out."},
+  {s:null,t:"I don't know what else we could have done."},
+  {s:null,t:"I just… dear God."},
+  {s:"Interviewer",t:"Why did you decide to personally investigate the location mentioned in the letter?"},
+  {s:null,t:"Sorry."},
+  {s:null,t:"I wanted to make sure it wasn't a hoax. I still wasn't convinced. I've had twenty years of people sending me fake evidence. I guess maybe the case captured my imagination too. I always figured one day I'd think of something I'd overlooked and solve the whole thing. Felt unbelievable to have someone dump the answer in my lap. I needed to see with my own two eyes."},
+  {s:null,t:"Miss Bamer had pinpointed the location with city records, but neither of us was sure if it was still there. It was an abandoned industrial building. The last time it had a valid mailing address was fifty years ago. It might have caved in for all we knew."},
+  {s:null,t:"I think I also wanted to be the one to crack it. Whether or not it was dumped in my lap. That case has hung over my head for twenty years."},
+  {s:null,t:"Miss Bamer and I agreed to meet there the following morning."},
+  {s:"Interviewer",t:"Can you describe the crime scene?"},
+  {s:null,t:"Yes."},
+  {s:null,t:"It was an industrial building, as I stated. Approximately one hundred twenty feet long by maybe forty-five feet wide. It was a wooden structure and at first the condition seemed to match the neighboring buildings, however I noticed the facade had been recently patched in a few locations. Further investigation also revealed that the entrance had been chained and locked. My understanding was that it used to be a sheet metal shop. At least… excuse me, is there a garbage can?"},
+  {s:null,t:"I might vomit."},
+  {s:null,t:"Thank you."},
+  {s:null,t:"We."},
+  {s:null,t:"[Gagging]"},
+  {s:null,t:"Sorry."},
+  {s:null,t:"I thought I was empty."},
+  {s:null,t:"No, I want to get this done with. Then I'm going to want that sedative."},
+  {s:null,t:"I could smell something from inside the building. Very faintly. I figured that would count as probable cause, not that I need it as a civilian, but you never forget the way a corpse smells."},
+  {s:null,t:"They were… bad enough they had that same smell."},
+  {s:null,t:"I hadn't forgotten how to pick a lock, so I let myself inside."},
+  {s:null,t:"You know, I really do wish they had been corpses. I really do wish he had been a serial killer. I really do."},
+  {s:null,t:"Please say you believe me."},
+  {s:"Interviewer",t:"I do. Can you describe the interior of the building?"},
+  {s:null,t:"I'm trying to focus through this. I really am. I'm sorry, it's just that I'd like to go to sleep after this for a very long time."},
+  {s:null,t:"Is the paramedic here? Is the sedative ready?"},
+  {s:null,t:"Thank goodness."},
+  {s:null,t:"The warehouse had not been as abandoned as we were previously led to believe. The interior had a hallway with six rooms. The construction was old but visibly newer than the rest of the building. The walls between each room had been soundproofed. There were no windows to the outside or doorways between the rooms themselves. The only access was through the hallway."},
+  {s:null,t:"I tried to make Miss Bamer leave at that point."},
+  {s:null,t:"You see… the smell was stronger, inside."},
+  {s:null,t:"You could feel it, the smell. Like a grit getting stuck in your nose. Like bits of sand all over your skin."},
+  {s:null,t:"The rooms, uh, the rooms contained presses. Hydraulic presses. Four foot by eight foot custom presses. I couldn't figure out what they were at first, because they were hovering over what looked like hospital beds. There were IV bags in each room as well as other medical equipment."},
+  {s:null,t:"That's how he kept them alive for so long, of course."},
+  {s:null,t:"I think I might be seeing black spots."},
+  {s:"Interviewer",t:"Do you need to take a break?"},
+  {s:null,t:"The idea of having to start this again is worse than the idea of finishing it."},
+  {s:"Interviewer",t:"Then please describe your next course of action."},
+  {s:null,t:"The building was obviously an active crime scene. I had no doubt at this point. I was in the lair of what I believed to be a serial killer."},
+  {s:null,t:"I tried to tell Miss Bamer to leave several times. She refused on the grounds that it would not be right to leave me on my own. There wasn't much time to make an issue out of it. My opinion of her was that she was a bit nosey but basically alright and I didn't think she'd be a liability if she stayed out of my way. I had to make a judgment call as to whether or not I should proceed on my own in case the family was somehow, impossibly, still alive and perhaps in danger or if I should leave and call for back-up."},
+  {s:null,t:"I had told my wife where I was going previously so I knew my absence would be noted and reported if the worst happened. Neither of us could get cell phone reception."},
+  {s:null,t:"Sorry, I'm rambling."},
+  {s:null,t:"It was then that I heard… not even a gasp. It was like a gasp, but not really. I don't want to describe it anymore than that."},
+  {s:null,t:"There was a sound. It drew my attention further on. I had to act. That's all that matters."},
+  {s:null,t:"There were some stairs at the very far end of the warehouse descending into a basement. I told Miss Bamer to remain behind and pulled my service revolver. I had a flashlight on my person as well, and turned it on as I descended into the basement."},
+  {s:null,t:"The basement had been hand dug. Maybe even over the course of the entire twenty year disappearance. I don't know. The floor was dirt and there was a tunnel that retreated back far enough that it had to be supported with struts at regular intervals. When my flashlight first illuminated the… stack…"},
+  {s:null,t:"I wish they'd been dead."},
+  {s:null,t:"I wish he'd been a serial killer."},
+  {s:"Interviewer",t:"Please take a moment."},
+  {s:null,t:"After I… after I recovered my first thought was 'Thank God, they are all dead.'"},
+  {s:null,t:"[Gagging]"},
+  {s:null,t:"I'm sixty-four years old for Christ's sake. I'm not a young man who can forget things anymore. When you're young you have this sense that you're invincible and that you're never going to die. I don't have that to protect me anymore."},
+  {s:null,t:"Look at me whining, when they had that done to them."},
+  {s:null,t:"It's my fault. I should have found them. Saved them, somehow."},
+  {s:"Interviewer",t:"I'm sorry, Hob, I've got to ask. Can you describe the scene?"},
+  {s:null,t:"Yeah-"},
+  {s:null,t:"[Gagging]"},
+  {s:null,t:"I can."},
+  {s:null,t:"I didn't know what I was looking at, at first. Hell, I still don't. It was… well, it was a stack. Maybe two feet thick. From the stink and coloring it was obviously made of flesh. I thought maybe he'd hacked them up and stacked them up in pieces. That would have been bad enough. The first thing that alerted me to the truth was the eyeball. On the top of the stack was a perfectly round eyeball in the middle of a socket that had been distorted to the size of a saucer. That's when I realized what I was looking at was…"},
+  {s:null,t:"Twenty goddamn years of torture, basically."},
+  {s:null,t:"He had the entire Driscoll family under those presses for twenty years, keeping them alive on an IV drip, increasing the pressure on them so very slowly that their bodies had time to adapt, until they'd been flattened like… well, like pancakes. He squished them by about a quarter inch every year for twenty years. Then he'd pulled them out when they were too broken and wretched to move, without any chance of recovery and stacked them on top of each other. I've got no idea what for. I don't want to know."},
+  {s:null,t:"And I was still thinking \"Thank God they're all dead\" when the one on top started gasping again."},
+  {s:"Interviewer",t:"What did they say?"},
+  {s:null,t:"Nothing at first. It couldn't speak without help. I think… it would have been Avery Driscoll. Not that I could tell much about the gender or the age. But the hair was blonde where there was hair. The head was a mess of scars. I think the son of a bitch who did this must have removed parts of their skulls. I've got no idea how he got their heads so flat, otherwise. Not as flat as the rest of the bodies but flat. Who the hell knows how their brains handled that. Their lips were punctured by teeth everywhere, after the presses had flattened out their noses, I guess."},
+  {s:null,t:"Avery was fourteen when he disappeared."},
+  {s:null,t:"I've stopped shaking."},
+  {s:null,t:"Goddamn weird the way our bodies work, isn't it?"},
+  {s:null,t:"What else?"},
+  {s:null,t:"There was a machine. A sort of pump. I followed a hose with my flashlight and realized everyone in the stack was hooked up to the pump. I don't think they could breathe on their own, you see. Not after a while. There simply wasn't enough volume for their lungs to inflate. There was some sort of opening cut right into each of their chests. There was a switch on the pump. I don't know why I pressed it. I was in a panic. I wanted to do something. Maybe some stupid part of me thought that if I switched it on they would inflate and be okay."},
+  {s:null,t:"I switched it. It increased the volume of air to the topmost hose. I could hear the pump working harder."},
+  {s:null,t:"Which is when Avery Driscoll started to scream."},
+  {s:null,t:"He begged me to kill him. He said other things too. He didn't make much sense. Kept yelling 'Bane of Error' over and over again. Something about 'the Family' too. Didn't understand it. He was in pain and I would hope he had gone insane several years previously."},
+  {s:"Interviewer",t:"Oh my God."},
+  {s:null,t:"My thoughts exactly."},
+  {s:null,t:"I didn't know what to do. He wouldn't stop screaming. I believe he was convinced I was his torturer. A closer look at his eye revealed that it was mostly a mess of white scar tissue. He was as blind as a bat."},
+  {s:null,t:"You know, I spoke with some burn victims once. They told me that they managed to find meaning and purpose again after a while. I don't know how anyone in the Driscoll family could have done that."},
+  {s:null,t:"I stated my name. I told him I was a detective. I told him I was there to help. I repeated it over and over again, knowing of course there was nothing that anyone anywhere could do to help."},
+  {s:null,t:"Miss Bamer arrived, drawn by the sound. Before she saw the stack she told me that I had screamed and she had come to help, but I do not remember having done so. Nevertheless she arrived. Then she saw the stack and screamed but I was intent on Avery Driscoll. He was able to hear. He became lucid for a few moments. It was a strain to understand what he said, but I will never be able to forget it."},
+  {s:null,t:"\"Please kill me. It hurts. I don't want to be a monster. Please kill me and tell my family I died a long time ago. I don't know if they're still looking for me. Don't let them know what happened to me. Please kill me.\""},
+  {s:null,t:"He could still cry and he did, although his tear ducts were too deformed for it to be noticeable."},
+  {s:null,t:"I should have forced Miss Bamer to leave. That is the only action in the matter which I regret more than failing to solve the case twenty years ago. Not just for her own sake, but for what she did next. I don't think she could have wounded them anymore deeply if she'd tried. She took away the last comfort any of them in that stack had."},
+  {s:null,t:"You see, they had not been able to speak to one another for twenty years."},
+  {s:null,t:"She said, \"That's all of them isn't it? That's the entire Driscoll family. They're all alive in there. The whole family.\""},
+  {s:null,t:"For twenty years, each member of the Driscoll family had been unaware their fellow inmates were the other members of their family. They'd all been holding out hope their family was okay. All of them dreaming someone out there loved them and was free from suffering."},
+  {s:null,t:"Do you know what the screams of six people tortured over two decades, smashed down to a width of four inches sounds like when they're all stacked on top of one another?"},
+  {s:null,t:"It sounds like the gates of hell swinging open."},
+  {s:"Interviewer",t:"I think that is enough, Detective Milgate."},
+  {s:null,t:"Not yet."},
+  {s:null,t:"It was my mistake. I should have tried harder. Tracked down that lead. Maybe that's what they meant, screaming that. It was my error so it was my responsibility."},
+  {s:null,t:"I shot them. Mercy is hard, but I owed it to them. I am the one that failed to save them."},
+  {s:null,t:"It only took one bullet to go all the way through. I emptied my revolver, though. To make sure they didn't linger. To give them that final peace."},
+  {s:null,t:"It was the only kindness I had to give them."},
+  {s:null,t:"We left and called for back-up after that. Neither Miss Bamer nor I wished to remain with the bodies. I elected not to follow the crime scene investigators back into the basement. I asked if I could make my statement and leave and after one of them saw what I had seen they agreed."},
+  {s:null,t:"May I have my sedative now?"},
+  {s:"Interviewer",t:"Yes… yes, of course."},
+  {s:null,t:"Thank you."},
+  {s:null,t:"Please show in the paramedic. I'll roll up my sleeve. My wife has diabetes so I'm well aware of the routine. Oh, and please make sure you have the same courtesy available for Miss Bamer. She seemed to have it worse than me, after. Poor woman couldn't even throw up or cry."},
+  {s:"Interviewer",t:"Of course. Do you know where she is now? She told the lead at the crime scene she was going home but we haven't been able to reach her."},
+  {s:null,t:"Did you try the paper?"},
+  {s:"Interviewer",t:"Which paper?"},
+  {s:null,t:"The Daily World."},
+  {s:"Interviewer",t:"Are you sure? There is no one by the last name of Bamer on staff with the Daily World."},
+];
+
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const RADIUS = IS_MOBILE ? 30 : 40;
+const FADE   = 0.2;
+const BLINK_SUPPRESS = IS_MOBILE ? 1 : 0;
+const BLINK_THRESH   = IS_MOBILE ? 0.012 : 0.018;
+
+const dotEl = document.getElementById('dot');
+const barEl = document.getElementById('bar');
+const sbarR = document.getElementById('sbar-r');
+const sbarL = document.getElementById('sbar-l');
+
+let gx = -999, gy = -999;
+let chars = [], total = 0;
+let rafId;
+
+function moveGazeDot(x, y) {
+  gx = x; gy = y;
+  dotEl.style.left = x + 'px';
+  dotEl.style.top  = y + 'px';
+  dotEl.style.visibility = 'visible';
+}
+
+function buildText() {
+  const c = document.getElementById('txt');
+  c.innerHTML = ''; chars = [];
+
+  // reader-title 글자도 소멸 대상
+  document.getElementById('reader-title').querySelectorAll('span').forEach(sp => {
+    const text = sp.textContent; sp.textContent = '';
+    [...text].forEach(ch => {
+      const s = document.createElement('span');
+      s.className = 'ch'; s.textContent = ch;
+      sp.appendChild(s);
+      chars.push({el:s, op:1, gone:false});
+    });
+  });
+
+  const frag = document.createDocumentFragment();
+  RAW.forEach(b => {
+    if (b.s) {
+      const row = document.createElement('div');
+      row.className = 'spk-row';
+      const sp = document.createElement('span');
+      sp.className = 'spk';
+      [...b.s].forEach(ch => {
+        const sc = document.createElement('span');
+        sc.className='ch'; sc.textContent=ch;
+        sp.appendChild(sc);
+        chars.push({el:sc, op:1, gone:false});
+      });
+      row.appendChild(sp);
+      const p = document.createElement('p');
+      p.className = 'para';
+      [...b.t].forEach(ch => {
+        const s = document.createElement('span');
+        s.className='ch'; s.textContent=ch;
+        p.appendChild(s);
+        chars.push({el:s, op:1, gone:false});
+      });
+      row.appendChild(p);
+      frag.appendChild(row);
+    } else {
+      const p = document.createElement('p');
+      p.className = 'para no-spk';
+      [...b.t].forEach(ch => {
+        const s = document.createElement('span');
+        s.className='ch'; s.textContent=ch;
+        p.appendChild(s);
+        chars.push({el:s, op:1, gone:false});
+      });
+      frag.appendChild(p);
+    }
+  });
+  c.appendChild(frag);
+  total = chars.length;
+}
+
+function tick() {
+  rafId = requestAnimationFrame(tick);
+  let dirty = false;
+  chars.forEach(c => {
+    if (c.gone) return;
+    const r = c.el.getBoundingClientRect();
+    const cx = (r.left + r.right) * .5;
+    const cy = (r.top  + r.bottom) * .5;
+    if (Math.hypot(cx - gx, cy - gy) < RADIUS) {
+      c.op = Math.max(0, c.op - FADE);
+      c.el.style.opacity = c.op;
+      if (c.op === 0) c.gone = true;
+      dirty = true;
+    }
+  });
+  if (dirty) {
+    const gone = chars.filter(c=>c.gone).length;
+    const pct  = Math.round(gone/total*100);
+    barEl.style.width = pct + '%';
+    sbarR.textContent = pct + '% erased';
+    if (gone === total) {
+      document.getElementById('scr-done').style.display = 'flex';
+      cancelAnimationFrame(rafId);
+    }
+  }
+}
+
+function startReader(mouseMode) {
+  document.getElementById('scr-start').style.display = 'none';
+  document.getElementById('scr-cal').style.display   = 'none';
+  document.getElementById('sbar').style.display      = 'flex';
+
+  const rt = document.getElementById('reader-title');
+  rt.style.display = 'flex';
+  rt.style.flexDirection = 'column';
+
+  const tw = document.getElementById('txt-wrap');
+  tw.style.display = 'block';
+
+  if (mouseMode) {
+    sbarL.textContent = 'Mouse mode';
+    dotEl.style.background = 'rgba(120,160,255,.7)';
+    dotEl.style.visibility = 'visible';
+    document.addEventListener('mousemove', e => moveGazeDot(e.clientX, e.clientY));
+  } else {
+    sbarL.textContent = 'Eye tracking';
+    dotEl.style.background = 'rgba(200,75,30,.8)';
+    dotEl.style.visibility = 'visible';
+  }
+  buildText();
+  requestAnimationFrame(tick);
+}
+
+/* FaceMesh */
+let faceMesh, cam;
+const smoothBuf = [];
+const SMOOTH_N = IS_MOBILE ? 12 : 5;
+let blinkCooldown = 0;
+const cal = [];
+let lastRaw = {x:.5, y:.5};
+let mapCoef = null;
+
+function smoothGaze(x, y) {
+  smoothBuf.push({x, y});
+  if (smoothBuf.length > SMOOTH_N) smoothBuf.shift();
+  return {
+    x: smoothBuf.reduce((a,p)=>a+p.x,0)/smoothBuf.length,
+    y: smoothBuf.reduce((a,p)=>a+p.y,0)/smoothBuf.length,
+  };
+}
+
+function buildMapCoef() {
+  const W=window.innerWidth, H=window.innerHeight;
+  if (cal.length < 4) { mapCoef=null; return; }
+  const n=cal.length;
+  let sRX=0,sRY=0,sSX=0,sSY=0,sRX2=0,sRY2=0,sRXSX=0,sRYSY=0;
+  cal.forEach(p=>{
+    sRX+=p.rx; sRY+=p.ry; sSX+=p.sx; sSY+=p.sy;
+    sRX2+=p.rx*p.rx; sRY2+=p.ry*p.ry;
+    sRXSX+=p.rx*p.sx; sRYSY+=p.ry*p.sy;
+  });
+  const dX=n*sRX2-sRX*sRX, dY=n*sRY2-sRY*sRY;
+  if (Math.abs(dX)<1e-6||Math.abs(dY)<1e-6) { mapCoef=null; return; }
+  mapCoef={
+    ax:(n*sRXSX-sRX*sSX)/dX, bx:(sSX-(n*sRXSX-sRX*sSX)/dX*sRX)/n,
+    ay:(n*sRYSY-sRY*sSY)/dY, by:(sSY-(n*sRYSY-sRY*sSY)/dY*sRY)/n,
+    W, H
+  };
+}
+
+function mapGaze(rx, ry) {
+  const W=window.innerWidth, H=window.innerHeight;
+  if (!mapCoef) return {x:rx*W, y:ry*H};
+  const mx=mapCoef.ax*rx+mapCoef.bx;
+  const my=mapCoef.ay*ry+mapCoef.by;
+  if (mx<-W||mx>W*2||my<-H||my>H*2) return {x:rx*W, y:ry*H};
+  return {x:Math.max(0,Math.min(W,mx)), y:Math.max(0,Math.min(H,my))};
+}
+
+function initFaceMesh() {
+  faceMesh = new FaceMesh({locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
+  faceMesh.setOptions({maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:.5, minTrackingConfidence:.5});
+  faceMesh.onResults(res => {
+    if (!res.multiFaceLandmarks?.[0]) return;
+    const lm = res.multiFaceLandmarks[0];
+    const lI=lm[473], rI=lm[468];
+    if (!lI||!rI) return;
+    const lT=lm[159],lB=lm[145],rT=lm[386],rB=lm[374];
+    if (lT&&lB&&rT&&rB) {
+      if ((Math.abs(lB.y-lT.y)+Math.abs(rB.y-rT.y))/2 < BLINK_THRESH) {
+        blinkCooldown = BLINK_SUPPRESS; return;
+      }
+    }
+    if (blinkCooldown > 0) { blinkCooldown--; return; }
+    let rx, ry;
+    if (IS_MOBILE) {
+      const nose=lm[1], brow=lm[168], chin=lm[152];
+      const eyeCx=(lI.x+rI.x)/2, eyeCy=(lI.y+rI.y)/2;
+      rx = 1-(nose.x*0.6+eyeCx*0.4);
+      const faceH = Math.abs(chin.y-brow.y)||0.01;
+      ry = (nose.y-brow.y)/faceH*0.7 + (lI.y+rI.y)/2*0.3;
+    } else {
+      rx = 1-(lI.x+rI.x)/2;
+      ry = (lI.y+rI.y)/2;
+    }
+    lastRaw = {x:rx, y:ry};
+    const sm = smoothGaze(rx, ry);
+    const W=window.innerWidth, H=window.innerHeight;
+    const mp = mapCoef ? mapGaze(sm.x,sm.y) : {x:sm.x*W, y:sm.y*H};
+    moveGazeDot(mp.x, mp.y);
+  });
+}
+
+function startCam() {
+  const v = document.getElementById('vid');
+  v.style.display = 'block';
+  let skipFrame = false;
+  cam = new Camera(v, {
+    onFrame: async () => {
+      if (IS_MOBILE && skipFrame) { skipFrame=false; return; }
+      if (IS_MOBILE) skipFrame=true;
+      await faceMesh.send({image:v});
+    },
+    width: IS_MOBILE ? 320 : 640,
+    height: IS_MOBILE ? 240 : 480,
+  });
+  cam.start();
+}
+
+function calPositions() {
+  const W=window.innerWidth, H=window.innerHeight;
+  const vvp=window.visualViewport;
+  const safeB=vvp?Math.max(0,H-(vvp.height+vvp.offsetTop)):0;
+  const pad=safeB+44;
+  return [
+    [W*.1,H*.08],[W*.5,H*.08],[W*.9,H*.08],
+    [W*.1,H*.50],[W*.5,H*.50],[W*.9,H*.50],
+    [W*.1,H-pad],[W*.5,H-pad],[W*.9,H-pad],
+  ];
+}
+
+window.addEventListener('resize', ()=>{
+  if (!cal.length) return;
+  const W=window.innerWidth, H=window.innerHeight;
+  cal.forEach(p=>{ if(p.rx_ratio!==undefined){p.sx=p.rx_ratio*W;p.sy=p.ry_ratio*H;} });
+});
+
+let calIdx=0, calDots=[];
+function setupCalDots() {
+  const scr=document.getElementById('scr-cal');
+  const pos=calPositions();
+  pos.forEach(([sx,sy],i)=>{
+    const d=document.createElement('div');
+    d.className='cdot'+(i>0?' off':'');
+    d.style.left=sx+'px'; d.style.top=sy+'px';
+    const onTap=(e)=>{
+      try{
+        if(e&&e.cancelable) e.preventDefault();
+        if(i!==calIdx) return;
+        cal.push({rx:lastRaw.x,ry:lastRaw.y,sx,sy,
+          rx_ratio:sx/window.innerWidth,ry_ratio:sy/window.innerHeight});
+        d.classList.add('done');
+        calIdx++;
+        if(calIdx<pos.length){
+          calDots[calIdx].classList.remove('off');
+        } else {
+          buildMapCoef();
+          startReader(false);
+        }
+      }catch(err){console.error(err);}
+    };
+    d.addEventListener('click', onTap);
+    d.addEventListener('touchend', onTap, {passive:false});
+    scr.appendChild(d);
+    calDots.push(d);
+  });
+}
+
+document.getElementById('reader-title').addEventListener('click', ()=>location.reload());
+
+document.getElementById('btn-start').addEventListener('click', ()=>{
+  navigator.mediaDevices.getUserMedia({video:true})
+    .then(stream=>{
+      stream.getTracks().forEach(t=>t.stop());
+      document.getElementById('scr-start').style.display='none';
+      document.getElementById('scr-cal').style.display='block';
+      dotEl.style.visibility='visible';
+      initFaceMesh();
+      setupCalDots();
+      startCam();
+    })
+    .catch(()=>{
+      document.getElementById('scr-start').style.display='none';
+      startReader(true);
+    });
+});
+</script>
+</body>
+</html>
