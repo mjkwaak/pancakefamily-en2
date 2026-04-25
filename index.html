@@ -54,7 +54,7 @@ html,body{height:100%;background:#fff;color:#000}
   pointer-events:none
 }
 .cdot{
-  position:absolute;width:10px;height:10px;border-radius:50%;
+  position:absolute;width:17px;height:17px;border-radius:50%;
   background:#000;transform:translate(-50%,-50%);
   cursor:pointer;touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
@@ -83,12 +83,12 @@ html,body{height:100%;background:#fff;color:#000}
 #reader-title{display:none !important}
 
 /* ══ 본문 영역 (PC) ══ */
-#txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:670px;padding-left:150px;overflow-y:auto;scrollbar-width:none}
+#txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:770px;padding-left:250px;overflow-y:auto;scrollbar-width:none}
 #txt-wrap::-webkit-scrollbar{display:none}
 #txt{display:flex;flex-direction:column}
 
 /* ══ 본문 텍스트 ══ */
-.para{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;line-height:1.3;text-align:justify;hyphens:auto;-webkit-hyphens:auto;color:#000;letter-spacing:0.02em;word-spacing:0.05em;margin-bottom:1.4em}
+.para{font-family:'neue-haas-grotesk-display',sans-serif;font-weight:500;font-size:14px;line-height:1.3;text-align:justify;hyphens:auto;-webkit-hyphens:auto;text-justify:inter-word;font-kerning:normal;color:#000;letter-spacing:0.02em;word-spacing:0.05em;margin-bottom:1.4em}
 .ch{display:inline}
 
 
@@ -118,7 +118,7 @@ html,body{height:100%;background:#fff;color:#000}
   #reader-title{display:none !important}
 
   /* 본문: interviewer 컬럼 공간 확보 후 본문 */
-  #txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:670px;padding-left:150px;overflow-y:auto;scrollbar-width:none}
+  #txt-wrap{display:none;position:fixed;top:50px;bottom:50px;left:50%;transform:translateX(-50%);width:770px;padding-left:250px;overflow-y:auto;scrollbar-width:none}
 
   .para{
     font-size:14px !important;
@@ -134,7 +134,7 @@ html,body{height:100%;background:#fff;color:#000}
 }
 
 .spk-ch{color:#000}
-.spk-inline{margin-left:-150px;width:670px}</style>
+.spk-inline{margin-left:-250px;width:770px}</style>
 </head>
 <body>
 
